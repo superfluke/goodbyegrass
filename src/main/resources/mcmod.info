@@ -1,0 +1,16 @@
+[
+{
+  "modid": "goodbyegrass",
+  "name": "Goodbye Grass",
+  "description": "Simple mod to remove grass from worldgen",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["SuperFluke"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
