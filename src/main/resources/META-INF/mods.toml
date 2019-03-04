@@ -1,0 +1,15 @@
+modLoader="javafml"
+loaderVersion="[25,)"
+issueTrackerURL="https://github.com/superfluke/goodbyegrass/issues"
+[[mods]]
+modId="goodbyegrass"
+version="1.1.0"
+displayName="Goodbye Grass"
+#updateJSONURL="http://myurl.me/"
+displayURL="https://minecraft.curseforge.com/projects/goodbye-grass"
+#logoFile="examplemod.png"
+credits=""
+authors="Super_Fluke"
+description='''
+A simple mod that removes grass from world gen. Requested by haters of foliage.
+'''

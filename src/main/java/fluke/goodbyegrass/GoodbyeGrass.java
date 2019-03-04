@@ -1,52 +1,50 @@
 package fluke.goodbyegrass;
 
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
+import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import fluke.goodbyegrass.proxy.CommonProxy;
+import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.feature.CompositeFeature;
+import net.minecraft.world.gen.feature.DoublePlantFeature;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.TallGrassFeature;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 
-
-@Mod(modid = GoodbyeGrass.MODID, name = GoodbyeGrass.NAME, version = GoodbyeGrass.VERSION, acceptableRemoteVersions="*")
-public class GoodbyeGrass 
+@Mod("goodbyegrass")
+public class GoodbyeGrass
 {
+    private static final Logger LOGGER = LogManager.getLogger();
 
-	public static final String MODID = "goodbyegrass";
-	public static final String NAME = "Goodbye Grass";
-	public static final String VERSION = "1.1.0";
+    public GoodbyeGrass() 
+    {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, fluke.goodbyegrass.init.ModConfig.SPEC);
+        MinecraftForge.EVENT_BUS.register(this);
+    }
 
+    private void setup(final FMLCommonSetupEvent event)
+    {
+        // some preinit code
+        LOGGER.info("HELLO HUMANS. GOODBYE GRASS");
+        ForgeRegistries.BIOMES.forEach(biome->{
+        	List<CompositeFeature<?, ?>> compFeatures = biome.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION);
+    		for(int n=compFeatures.size()-1; n>=0; n--)
+    		{
+    			@SuppressWarnings("rawtypes")
+				Feature feature = compFeatures.get(n).getFeature();
+    			if(feature instanceof TallGrassFeature || feature instanceof DoublePlantFeature)
+    			{
+    				//LOGGER.info("Removing " + feature.toString() + " from " + biome.getDisplayName());
+    				biome.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).remove(n);
+    			}
+    		}
+        });
+    }
 
-	@Instance(MODID)
-	public static GoodbyeGrass instance;
-
-	@SidedProxy(clientSide = "fluke.goodbyegrass.proxy.ClientProxy", serverSide = "fluke.goodbyegrass.proxy.CommonProxy")
-	public static CommonProxy proxy;
-
-	public static Logger logger;
-	
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) 
-	{
-		logger = event.getModLog();
-	}
-
-	@EventHandler
-	public void init(FMLInitializationEvent event) 
-	{
-		proxy.init();
-	}
-
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) 
-	{
-		proxy.postInit();
-	}
 }
-
