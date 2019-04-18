@@ -19,6 +19,7 @@ usernamecache.json
 
 # Package Files #
 *.jar
+!gradle-wrapper.jar
 *.war
 *.ear
 /bin
