@@ -1,6 +1,7 @@
 package fluke.goodbyegrass.proxy;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import fluke.goodbyegrass.GoodbyeGrass;
 import fluke.goodbyegrass.config.Configs;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class CommonProxy 
 {
 	public ArrayList<Biome> biomeWhitelist = new ArrayList<Biome>();
+	private static Random rand = new Random();
 	
 	public void init()
 	{
@@ -33,9 +35,10 @@ public class CommonProxy
 		{
 			if(Configs.worldgen.removeGrass)
 			{
+				boolean doRemove = false;
 				if(biomeWhitelist == null)
 				{
-					event.setResult(Result.DENY);
+					doRemove = true;
 				}
 				else
 				{
@@ -44,20 +47,28 @@ public class CommonProxy
 					{
 						if(currentBiome == whitelistedBiome)
 						{
-							event.setResult(Result.DENY);
-							return;
+							doRemove = true;
+							break;
 						}
 					}
 				}
-			};
+				
+				if(doRemove)
+				{
+					int removeChance = rand.nextInt(100) + 1;
+					if(removeChance <= Configs.worldgen.grassRemovalPercent)
+						event.setResult(Result.DENY);
+				}
+			}
 		}
 		else if(event.getType() == Decorate.EventType.FLOWERS)
 		{
 			if(Configs.worldgen.removeFlowers)
 			{
+				boolean doRemove = false;
 				if(biomeWhitelist == null)
 				{
-					event.setResult(Result.DENY);
+					doRemove = true;
 				}
 				else
 				{
@@ -66,10 +77,17 @@ public class CommonProxy
 					{
 						if(currentBiome == whitelistedBiome)
 						{
-							event.setResult(Result.DENY);
-							return;
+							doRemove = true;
+							break;
 						}
 					}
+				}
+				
+				if(doRemove)
+				{
+					int removeChance = rand.nextInt(100) + 1;
+					if(removeChance <= Configs.worldgen.flowerRemovalPercent)
+						event.setResult(Result.DENY);
 				}
 			}
 				
